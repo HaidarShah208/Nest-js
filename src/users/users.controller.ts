@@ -1,8 +1,10 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, UseFilters, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from 'src/gaurd/auth/auth.guard';
+import { HttpExceptionFilter } from 'src/filters/http-exception/http-exception.filter';
 
 @Controller('users')
+@UseFilters(HttpExceptionFilter)
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
     @Get()
@@ -16,7 +18,7 @@ export class UsersController {
     }
     
     @Get(':id')
-    GetUsersById(@Param('id') id:string) {
+    GetUsersById(@Param('id',ParseIntPipe) id:number) {
         return this.usersService.getUsersById(Number(id));
     }
 
